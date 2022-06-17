@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_main.xml" value="0.536" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/drawable-v24/ic_launcher_background.xml" value="0.2185" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_login.xml" value="0.264" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_main.xml" value="0.176" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/main_menu_grid_item.xml" value="0.16510416666666666" />
       </map>
     </option>
   </component>
