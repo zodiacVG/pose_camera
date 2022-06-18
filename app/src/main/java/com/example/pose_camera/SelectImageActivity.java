@@ -58,7 +58,7 @@ public class SelectImageActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_select_image);
         ib_add = findViewById(R.id.ib_add);
         Button btn_gray = findViewById(R.id.btn_gray);
         Button btn_base = findViewById(R.id.btn_base);
