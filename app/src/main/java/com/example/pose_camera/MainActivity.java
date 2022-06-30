@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void jumpToCameraShootPage (View view) {
+        Intent intent = new Intent(this,CameraShootActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
