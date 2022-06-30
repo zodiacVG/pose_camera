@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CameraXDemo</string>
+    <string name="pick_image">选择照片</string>
+</resources>
