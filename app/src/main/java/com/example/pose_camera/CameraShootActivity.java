@@ -51,10 +51,10 @@ public class CameraShootActivity extends AppCompatActivity {
         previewView = findViewById(R.id.previewView);
         bSelectPicture = findViewById(R.id.btn_camera_filter);
         Permission();
-//        bSelectPicture.setOnClickListener(view -> {
-//            Intent intent = new Intent(CameraShootActivity.this, ProcessActivity.class);
-//            startActivity(intent);
-//        });
+        bSelectPicture.setOnClickListener(view -> {
+            Intent intent = new Intent(CameraShootActivity.this, ProcessActivity.class);
+            startActivity(intent);
+        });
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> {
             try {
@@ -182,16 +182,16 @@ public class CameraShootActivity extends AppCompatActivity {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
 
-//                        Uri contentUri = Uri.fromFile(new File(finalImageFile.getAbsolutePath()));
-////                        System.out.println("URL"+contentUri);
-//                        Log.e("异常信息", String.valueOf(outputFileResults));
-//                        Log.e("异常信息", String.valueOf(contentUri));
-//                        Uri savedUri = outputFileResults.getSavedUri();
-//                        Log.e("异常信息", String.valueOf(savedUri));
-//                        Toast.makeText(CameraShootActivity.this, "保存成功: ", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(CameraShootActivity.this, ProcessActivity.class);
-//                        intent.putExtra("image", contentUri.toString());
-//                        startActivity(intent);
+                        Uri contentUri = Uri.fromFile(new File(finalImageFile.getAbsolutePath()));
+//                        System.out.println("URL"+contentUri);
+                        Log.e("异常信息", String.valueOf(outputFileResults));
+                        Log.e("异常信息", String.valueOf(contentUri));
+                        Uri savedUri = outputFileResults.getSavedUri();
+                        Log.e("异常信息", String.valueOf(savedUri));
+                        Toast.makeText(CameraShootActivity.this, "保存成功: ", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(CameraShootActivity.this, ProcessActivity.class);
+                        intent.putExtra("image", contentUri.toString());
+                        startActivity(intent);
 
                     }
 
