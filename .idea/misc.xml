@@ -4,8 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/drawable-v24/ic_launcher_background.xml" value="0.2185" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.183" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/drawable/ic_launcher_background.xml" value="0.183" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.183" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/drawable/ic_photos.xml" value="0.183" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_camera_shoot.xml" value="0.24322916666666666" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_camera_shoote.xml" value="0.24322916666666666" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_camera_shot.xml" value="0.2265625" />
         <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_login.xml" value="0.264" />
-        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_main.xml" value="0.152" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_process.xml" value="0.253125" />
         <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/activity_select_image.xml" value="0.12335359675785208" />
         <entry key="..\:/github/camera_project_files/pose_camera/app/src/main/res/layout/main_menu_grid_item.xml" value="0.16510416666666666" />
       </map>
