@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">pose_camera</string>
+    <string name="take_picture">拍照</string>
+    <string name="pixel">姿势识别</string>
+    <string name="shy">shy</string>
+    <string name="select_beauty">select_beauty</string>
+    <string name="选择滤镜">选择滤镜</string>
+    <string name="select_picture">选择图片</string>
+    <string name="show_picture">show_picture</string>
+    <string name="test_view">显示照片</string>
+    <string name="getBeauty">照片评分</string>
 </resources>
