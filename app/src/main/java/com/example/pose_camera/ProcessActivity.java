@@ -51,8 +51,8 @@ public class ProcessActivity extends AppCompatActivity {
         button1.setOnClickListener(view -> openSystemImageChooser(REQUEST_CODE));
         button2.setOnClickListener(view -> {
             //todo 需要设置新的client
-            Client client =new Client();
-            client.ClientUti(filePath);
+//            Client client =new Client();
+//            client.ClientUti(filePath);
         });
 
 

@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -21,9 +22,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -33,13 +40,28 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 
-public class CameraShootActivity extends AppCompatActivity {
+public class CameraShootActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
     ImageView bTakePicture;
     ImageView bSelectPicture;
     PreviewView previewView;
     private ImageCapture imageCapture;
     private ImageAnalysis imageAnalysis;
+    private int countAnalysis = 0;
+    private boolean isJudge = false;
+    private Switch swh_Judge;
+
+    public Handler mHandler = new Handler(Looper.myLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 0) {
+                String str = (String) msg.obj;
+                Toast.makeText(CameraShootActivity.this, str, Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +72,8 @@ public class CameraShootActivity extends AppCompatActivity {
 //        bRecording = findViewById(R.id.bRecord);
         previewView = findViewById(R.id.previewView);
         bSelectPicture = findViewById(R.id.btn_camera_filter);
+        swh_Judge = findViewById(R.id.swh_Judge);
+        isJudge = swh_Judge.isChecked();
         Permission();
         bSelectPicture.setOnClickListener(view -> {
             Intent intent = new Intent(CameraShootActivity.this, ProcessActivity.class);
@@ -67,7 +91,7 @@ public class CameraShootActivity extends AppCompatActivity {
 
         }, getExecutor());
         bTakePicture.setOnClickListener(view -> capturePhoto());
-
+        swh_Judge.setOnCheckedChangeListener(this);
     }
 
     private Executor getExecutor() {
@@ -120,59 +144,49 @@ public class CameraShootActivity extends AppCompatActivity {
                 .build();
 
 //        为获取摄像头预览中的每一帧，使用的ImageAnalysis
-        imageAnalysis = new ImageAnalysis.Builder()
+        //                .setTargetResolution(new Size(1280,720))
+        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
 //                .setTargetResolution(new Size(1280,720))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build();
-        imageAnalysis.setAnalyzer(getExecutor(), new ImageAnalysis.Analyzer() {
-            @Override
-            public void analyze(@NonNull ImageProxy image) {
+        imageAnalysis.setAnalyzer(getExecutor(), image -> {
 
-                final Bitmap bitmap = previewView.getBitmap();
-
-                image.close();
-
-
-
-
+            final Bitmap bitmap = previewView.getBitmap();
+            String base64 = ImageUtil.imageToBase64(bitmap);
+            if (isJudge) {
+                if (countAnalysis % 10 == 0) {
+                    CreateSurvey(base64);
+                }
+                countAnalysis++;
             }
+            image.close();
+
+
         });
-        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture,imageAnalysis);
+        cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture, imageAnalysis);
+    }
+
+    private void CreateSurvey(String base64) {
+        String url = "http://192.168.3.226:8000/Iscomplete ";
+        ClientUtil clientUtil = new ClientUtil();
+        clientUtil.SendImgString(url, base64, mHandler);
     }
 
     //    拍照
     private void capturePhoto() {
 
-        Date date =new Date();
-        String timestamp =String.valueOf(date.getTime());
-//       设置图像保存路径
-//        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CameraX/";
-////          查看文件夹是否存在, 如果不存在就创建一个新文件夹
-//        File localFile = new File(filePath);
-//        boolean isDirectoryCreated =  localFile.mkdir();
-//        if (!isDirectoryCreated){
-//          boolean  isDirectoryCreate =  localFile.mkdir();
-//          System.out.println(isDirectoryCreate);
-//        }
-////        图像最终的路径和名字
-//        File finalImageFile = new File(localFile, timestamp + ".jpg");
-//        if (finalImageFile.exists()) {
-//           boolean FileDeleted =  finalImageFile.delete();
-//            System.out.println(FileDeleted );
-//        }
-//        try {
-//           boolean isFileCreated =  finalImageFile.createNewFile();
-//           System.out.println(isFileCreated);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File finalImageFile = new File(path, timestamp + ".jpg");
+        long timestamp = System.currentTimeMillis();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
         Toast.makeText(CameraShootActivity.this, "拍照开始: ", Toast.LENGTH_SHORT).show();
-        Log.e("takePhoto" , String.valueOf(finalImageFile));
 
 
-        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(finalImageFile).build();
+        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
+                getContentResolver(),
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues
+        ).build();
 
         // Executor cameraExecutor = null;
 
@@ -182,27 +196,32 @@ public class CameraShootActivity extends AppCompatActivity {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
 
-                        Uri contentUri = Uri.fromFile(new File(finalImageFile.getAbsolutePath()));
-//                        System.out.println("URL"+contentUri);
-                        Log.e("异常信息", String.valueOf(outputFileResults));
-                        Log.e("异常信息", String.valueOf(contentUri));
                         Uri savedUri = outputFileResults.getSavedUri();
-                        Log.e("异常信息", String.valueOf(savedUri));
+                        Log.e("保存路径", String.valueOf(savedUri));
                         Toast.makeText(CameraShootActivity.this, "保存成功: ", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(CameraShootActivity.this, ProcessActivity.class);
-                        intent.putExtra("image", contentUri.toString());
-                        startActivity(intent);
-
                     }
 
                     @Override
                     public void onError(@NonNull ImageCaptureException exception) {
                         Toast.makeText(CameraShootActivity.this, "保存失败" + exception.getMessage(), Toast.LENGTH_SHORT).show();
-
                     }
                 }
 
         );
 
+    }
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (compoundButton.getId() == R.id.swh_Judge) {
+            countAnalysis = 0;
+            isJudge = compoundButton.isChecked();
+            if (isJudge) {
+                Toast.makeText(CameraShootActivity.this, "拍照辅助已打开", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(CameraShootActivity.this, "拍照辅助已关闭", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
