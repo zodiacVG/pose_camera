@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:layout_weight="1">
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <!--        <com.seu.magicfilter.widget.MagicCameraView-->
+        <!--            android:id="@+id/glsurfaceview_camera"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent" />-->
+        <Switch
+            android:id="@+id/swh_Judge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:clickable="true"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/btn_camera_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/selector_camera"
+                android:contentDescription="@string/shy"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120.0dip"
+            android:layout_gravity="bottom"
+            android:background="@android:color/white"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip">
+
+            <ImageView
+                android:id="@+id/btn_camera_beauty"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:scaleType="center"
+                android:src="@drawable/btn_camera_beauty"
+                android:contentDescription="@string/select_beauty"
+                android:clickable="true"
+
+                android:focusable="true" />
+
+            <ImageView
+                android:id="@+id/btn_camera_shutter"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:src="@drawable/btn_camera_shutter"
+                android:contentDescription="@string/take_picture"
+                android:clickable="true"
+
+                android:focusable="true" />
+
+            <ImageView
+                android:id="@+id/btn_camera_filter"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:scaleType="center"
+                android:clickable="true"
+                android:src="@drawable/btn_camera_filter"
+                android:contentDescription="@string/选择滤镜"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/layout_filter"
+            layout="@layout/filter_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="invisible" />
+    </FrameLayout>
+</LinearLayout>

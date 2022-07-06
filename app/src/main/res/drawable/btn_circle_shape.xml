@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:shape="oval">-->
+<!--    <corners android:radius="45dp" />   &lt;!&ndash; 设置圆角弧度 &ndash;&gt;-->
+<!--    <solid android:color="#7e0c6e" />   &lt;!&ndash; 设置背景颜色 &ndash;&gt;-->
+<!--    <size-->
+<!--        android:width="40dp"-->
+<!--        android:height="40dp" />-->
+<!--    <stroke-->
+<!--        android:width="0dp"-->
+<!--        android:color="#fff" />-->
+<!--</shape>-->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <solid
+        android:background="#E8EBF2"/>
+    <corners
+        android:radius="45dp"/>
+</shape>
