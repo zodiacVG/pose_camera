@@ -13,6 +13,8 @@ public class ImageUtil {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] buffer = byteArrayOutputStream.toByteArray();
         String baseStr = Base64.encodeToString(buffer, Base64.DEFAULT);
+        System.out.print("one time");
+        System.out.print(baseStr);
         return baseStr;
     }
 
