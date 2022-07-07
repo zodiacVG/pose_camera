@@ -167,7 +167,7 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
     }
 
     private void CreateSurvey(String base64) {
-        String url = "http://192.168.3.226:8000/Iscomplete ";
+        String url = "http://192.168.124.3:8000/Iscomplete ";
         ClientUtil clientUtil = new ClientUtil();
         clientUtil.SendImgString(url, base64, mHandler);
     }

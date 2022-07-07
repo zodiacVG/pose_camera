@@ -1,11 +1,15 @@
+from ast import dump
 import base64
 from sqlite3 import Time
 import string
+from unittest import result
 from flask import Flask, request 
 import mediapipe as mp
 import cv2
 import numpy as np
 import logging
+import json
+
 app = Flask(__name__)
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -120,6 +124,14 @@ def Getimg():
     # img_b64decode = base64.b64decode(img)  # base64解码
     # img_array = np.fromstring(img_b64decode,np.uint8) # 转换np序列
     # img=cv2.imdecode(img_array,cv2.COLOR_BGR2RGB)  # 
+
+@app.route('/testHelloWorld',methods=['POST','GET'])
+def helloWorld():
+    result_data={
+        "result":"zzb"
+    }
+    result_json=json.dumps(result_data)
+    return result_json
 
 
 @app.route('/register', methods=['POST','GET'])
