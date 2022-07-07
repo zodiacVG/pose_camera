@@ -3,6 +3,7 @@ import base64
 from sqlite3 import Time
 import string
 from unittest import result
+from ThirdRules import ThirdRulesDetection
 from flask import Flask, request 
 import mediapipe as mp
 import cv2
@@ -125,6 +126,7 @@ def Getimg():
     # img_array = np.fromstring(img_b64decode,np.uint8) # 转换np序列
     # img=cv2.imdecode(img_array,cv2.COLOR_BGR2RGB)  # 
 
+#测试，结果返回的是json格式
 @app.route('/testHelloWorld',methods=['POST','GET'])
 def helloWorld():
     result_data={
@@ -133,6 +135,23 @@ def helloWorld():
     result_json=json.dumps(result_data)
     return result_json
 
+#三分法检测
+@app.route('/ThirdRules', methods=['POST','GET'])  
+def ThirdRules():
+    #使用json获取数据
+    img = request.get_data()
+    img = json.loads(img)
+    img = img['image_base64']
+    with open ('1.jpg','wb')as files:
+        imgdata = base64.b64decode(img)
+        files.write(imgdata)
+    image =cv2.imread('1.jpg')  #使用cv2读入
+    res_string=ThirdRulesDetection(image)
+    res={
+        "result":res_string
+    }
+    res_json = json.dumps(res)
+    return res_json
 
 @app.route('/register', methods=['POST','GET'])
 def register():
