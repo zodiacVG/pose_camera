@@ -12,8 +12,6 @@ def get_output_layers(net):
     return output_layers
 
 # function to draw bounding box on the detected object with class name
-
-
 def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
     label = str(classes[class_id])
@@ -62,6 +60,8 @@ def ThirdRulesDetection(image):
     # and gather predictions from output layers
     outs = net.forward(get_output_layers(net))
 
+    print(outs)
+
     # initialization
     class_ids = []
     confidences = []
@@ -72,11 +72,12 @@ def ThirdRulesDetection(image):
     # for each detetion from each output layer
     # get the confidence, class id, bounding box params
     # and ignore weak detections (confidence < 0.5)
+    #获取置信度较高的识别出来的数据，位置，类别等等 
     for out in outs:
         for detection in out:
             scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
+            class_id = np.argmax(scores)  #最大的分数值
+            confidence = scores[class_id]  #置信度是多少
             if confidence > 0.5:
                 center_x = int(detection[0] * Width)
                 center_y = int(detection[1] * Height)
@@ -99,6 +100,7 @@ def ThirdRulesDetection(image):
         y = box[1]
         w = box[2]
         h = box[3]
+        print(x,y,w,h)
 
         draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
 
