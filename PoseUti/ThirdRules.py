@@ -12,8 +12,10 @@ def get_output_layers(net):
     return output_layers
 
 # function to draw bounding box on the detected object with class name
+#h画框框的函数
 def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
+    #claseeid:在分类表中的id
     label = str(classes[class_id])
 
     color = COLORS[class_id]
@@ -35,6 +37,29 @@ def ThirdRulesDetection(image):
     scale = 1/255
     # 读取分类表
     classes = None
+
+    #四个完美点的位置，从左至右，从上往下
+    third_rule_point_x1_x = Width/3
+    third_rule_point_x1_y = Height/3
+    
+    third_rule_point_x2_x = (Width/3)*2
+    third_rule_point_x2_y = Height/3
+
+    third_rule_point_x3_x = Width/3
+    third_rule_point_x3_y = (Height/3)*2
+
+    third_rule_point_x4_x = (Width/3)*2
+    third_rule_point_x4_y = (Height/3)*2
+
+    #使用二维数组存放四个标准点
+    third_rule_points = [[]]
+
+    third_rule_points[0] = [third_rule_point_x1_x,third_rule_point_x1_y]
+    third_rule_points[1] = [third_rule_point_x2_x,third_rule_point_x2_y]
+    third_rule_points[2] = [third_rule_point_x3_x,third_rule_point_x3_y]
+    third_rule_points[3] = [third_rule_point_x4_x,third_rule_point_x4_y]
+
+    
 
     with open("H:/github/camera_project_files/cv_dnn_models/yolov3.txt", 'r') as f:
         classes = [line.strip() for line in f.readlines()]
@@ -59,8 +84,6 @@ def ThirdRulesDetection(image):
     # run inference through the network
     # and gather predictions from output layers
     outs = net.forward(get_output_layers(net))
-
-    print(outs)
 
     # initialization
     class_ids = []
@@ -100,9 +123,15 @@ def ThirdRulesDetection(image):
         y = box[1]
         w = box[2]
         h = box[3]
+
+        #todo 如果标签是person的话，就开始判断是不是在完美点上
+
+
+        #x，y轴坐标，长度和宽度
         print(x,y,w,h)
 
         draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
+
 
     # display output image    
     cv2.imshow("object detection", image)
