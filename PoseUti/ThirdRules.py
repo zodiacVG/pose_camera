@@ -12,8 +12,8 @@ def get_output_layers(net):
     return output_layers
 
 # function to draw bounding box on the detected object with class name
-#h画框框的函数
-def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h):
+# 画框框和九宫格的函数
+def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h, photo_width, phoot_height):
 
     #claseeid:在分类表中的id
     label = str(classes[class_id])
@@ -21,6 +21,19 @@ def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w
     color = COLORS[class_id]
 
     cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
+
+    #把九宫格的线需要的点给指定出来
+    lines = []
+
+    lines.append([(photo_width/3,0),(photo_width/3,phoot_height)])
+    lines.append([(photo_width/3*2,0),(photo_width/3*2,phoot_height)])
+    lines.append([(0,phoot_height/3),(photo_width,phoot_height/3)])
+    lines.append([(0,phoot_height/3*2),(photo_width,phoot_height/3*2)])
+
+    #将线给画上去
+    line_num = 0
+    for item in lines:
+        cv2.line(img,item[0],item[1],(20,120,58),8)
 
     cv2.putText(img, label, (x-10, y-10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
@@ -51,6 +64,7 @@ def ThirdRulesDetection(image):
     third_rule_point_x4_x = (Width/3)*2
     third_rule_point_x4_y = (Height/3)*2
 
+    #todo 这里报错了，二维数组
     #使用二维数组存放四个标准点
     third_rule_points = [[]]
 
@@ -128,17 +142,20 @@ def ThirdRulesDetection(image):
 
         #todo 如果标签是person的话，就开始判断是不是在完美点上
         if(str(classes[class_ids[i]]) == 'person'):
-            #x是起始点，不是中点
             print('有 person')
+            num = 0
             for item in third_rule_points:
                 if(abs(center_x-item[0]) < Width/10):
-                    print('符合完美点')
+                    print('符合完美点' + num)
+                else:
+                    print('不符合完美点'+ num)
+                num = num + 1
         
 
         #x，y轴坐标，长度和宽度
         print(x,y,w,h)
 
-        draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
+        draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h), Width, Height)
 
 
     # display output image    
