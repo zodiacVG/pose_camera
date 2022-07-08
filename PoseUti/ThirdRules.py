@@ -110,7 +110,7 @@ def ThirdRulesDetection(image):
                 y = center_y - h / 2
                 class_ids.append(class_id)
                 confidences.append(float(confidence))
-                boxes.append([x, y, w, h])
+                boxes.append([x, y, w, h,center_x, center_y])
     # apply non-max suppression
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
 
@@ -123,9 +123,17 @@ def ThirdRulesDetection(image):
         y = box[1]
         w = box[2]
         h = box[3]
+        center_x = box[4]
+        center_y = box[5]
 
         #todo 如果标签是person的话，就开始判断是不是在完美点上
-
+        if(str(classes[class_ids[i]]) == 'person'):
+            #x是起始点，不是中点
+            print('有 person')
+            for item in third_rule_points:
+                if(abs(center_x-item[0]) < Width/10):
+                    print('符合完美点')
+        
 
         #x，y轴坐标，长度和宽度
         print(x,y,w,h)
