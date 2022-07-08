@@ -7,7 +7,7 @@ def get_output_layers(net):
 
     layer_names = net.getLayerNames()
 
-    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
     return output_layers
 
@@ -47,10 +47,11 @@ def ThirdRulesDetection(image):
     # 导入模型
     net = cv2.dnn.readNet("H:/github/camera_project_files/cv_dnn_models/yolov3.weights",
                           "H:/github/camera_project_files/cv_dnn_models/yolov3.cfg")
-    model = cv2.dnn_DetectionModel(net)
+    # model = cv2.dnn_DetectionModel(net)
     # 压缩图片至DNN可处理的尺寸，尺寸越大检测效果越好，但处理速度会变慢
     # model.setInputParams(size=(320, 320), scale=1 / 255)
 
+    print(net)
     blob = cv2.dnn.blobFromImage(
         image, scale, (416, 416), (0, 0, 0), True, crop=False)
 
@@ -92,7 +93,7 @@ def ThirdRulesDetection(image):
     # go through the detections remaining
     # after nms and draw bounding box
     for i in indices:
-        i = i[0]
+        i = i
         box = boxes[i]
         x = box[0]
         y = box[1]
