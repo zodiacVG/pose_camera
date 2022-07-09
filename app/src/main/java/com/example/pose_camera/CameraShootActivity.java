@@ -31,6 +31,7 @@ import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -45,6 +46,7 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
     ImageView bTakePicture;
     ImageView bSelectPicture;
     PreviewView previewView;
+    TextView textview;
     private ImageCapture imageCapture;
     private ImageAnalysis imageAnalysis;
     private int countAnalysis = 0;
@@ -57,7 +59,10 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
             super.handleMessage(msg);
             if (msg.what == 0) {
                 String str = (String) msg.obj;
-                Toast.makeText(CameraShootActivity.this, str, Toast.LENGTH_SHORT).show();
+                textview = findViewById(R.id.btn_text);
+                textview.setText(str);
+//                Toast.makeText(CameraShootActivity.this, str, Toast.LENGTH_SHORT).show();
+
 
             }
         }
@@ -167,7 +172,7 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
     }
 
     private void CreateSurvey(String base64) {
-        String url = "http://192.168.3.226:8000/Iscomplete ";
+        String url = "http://192.168.0.103:8000/ ";
         ClientUtil clientUtil = new ClientUtil();
         clientUtil.SendImgString(url, base64, mHandler);
     }
@@ -179,9 +184,6 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-        Toast.makeText(CameraShootActivity.this, "拍照开始: ", Toast.LENGTH_SHORT).show();
-
-
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
                 getContentResolver(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
