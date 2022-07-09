@@ -12,7 +12,7 @@ def get_output_layers(net):
     return output_layers
 # function to draw bounding box on the detected object with class name
 # 画框框和九宫格的函数
-def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h):
+def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h,center_x,center_y):
 
     #claseeid:在分类表中的id
     label = str(classes[class_id])
@@ -21,6 +21,10 @@ def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w
 
     cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
 
+    #画中点，并且标出来
+    cv2.circle(img,(center_x,center_y),4,color=(0,255,0))
+    # cv2.putText(img,'center',(center_x-10,center_y-10),cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+    
     cv2.putText(img, label, (x-10, y-10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 # function to get the output layer names
@@ -42,7 +46,10 @@ def draw_nine_box_lines(img,photo_width,photo_height):
     #将线给画上去
     line_num = 0
     for item in lines:
-        # cv2.line(img,item[0],item[1],(20,120,58),8)
+        cv2.line(img,
+            (int(item[0][0]),int(item[0][1])),
+            (int(item[1][0]),int(item[1][1])),
+            (20,120,58),3)
         print('展示pt1和pt2')
         print(item[0],item[1])
 
@@ -149,7 +156,7 @@ def ThirdRulesDetection(image):
         center_x = box[4]
         center_y = box[5]
 
-        #todo 如果标签是person的话，就开始判断是不是在完美点上
+        # 如果标签是person的话，就开始判断是不是在完美点上
         if(str(classes[class_ids[i]]) == 'person'):
             print('有 person')
             num = 0
@@ -164,9 +171,9 @@ def ThirdRulesDetection(image):
         #x，y轴坐标，长度和宽度
         print(x,y,w,h)
 
-        draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
+        draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h),round(center_x),round(center_y))
 
-
+    draw_nine_box_lines(image,Width,Height)
     # display output image    
     cv2.imshow("object detection", image)
 
