@@ -10,10 +10,9 @@ def get_output_layers(net):
     output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
     return output_layers
-
 # function to draw bounding box on the detected object with class name
 # 画框框和九宫格的函数
-def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h, photo_width, phoot_height):
+def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
     #claseeid:在分类表中的id
     label = str(classes[class_id])
@@ -22,25 +21,30 @@ def draw_bounding_box(classes, COLORS, img, class_id, confidence, x, y, x_plus_w
 
     cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
 
-    #把九宫格的线需要的点给指定出来
-    lines = []
-
-    lines.append([(photo_width/3,0),(photo_width/3,phoot_height)])
-    lines.append([(photo_width/3*2,0),(photo_width/3*2,phoot_height)])
-    lines.append([(0,phoot_height/3),(photo_width,phoot_height/3)])
-    lines.append([(0,phoot_height/3*2),(photo_width,phoot_height/3*2)])
-
-    #将线给画上去
-    line_num = 0
-    for item in lines:
-        cv2.line(img,item[0],item[1],(20,120,58),8)
-
     cv2.putText(img, label, (x-10, y-10),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 # function to get the output layer names
 # in the architecture
 
 # 读入的image是cv2解析之后的
+
+def draw_nine_box_lines(img,photo_width,photo_height):
+    #! 把九宫格的线需要的点给指定出来
+    lines = []
+
+    lines.append([(photo_width/3,0),(photo_width/3,photo_height)])
+    lines.append([(photo_width/3*2,0),(photo_width/3*2,photo_height)])
+    lines.append([(0,photo_height/3),(photo_width,photo_height/3)])
+    lines.append([(0,photo_height/3*2),(photo_width,photo_height/3*2)])
+
+    print(lines)
+
+    #将线给画上去
+    line_num = 0
+    for item in lines:
+        # cv2.line(img,item[0],item[1],(20,120,58),8)
+        print('展示pt1和pt2')
+        print(item[0],item[1])
 
 
 def ThirdRulesDetection(image):
@@ -66,13 +70,15 @@ def ThirdRulesDetection(image):
 
     #todo 这里报错了，二维数组
     #使用二维数组存放四个标准点
-    third_rule_points = [[]]
+    third_rule_points = []
 
-    third_rule_points[0] = [third_rule_point_x1_x,third_rule_point_x1_y]
-    third_rule_points[1] = [third_rule_point_x2_x,third_rule_point_x2_y]
-    third_rule_points[2] = [third_rule_point_x3_x,third_rule_point_x3_y]
-    third_rule_points[3] = [third_rule_point_x4_x,third_rule_point_x4_y]
+    third_rule_points.append([third_rule_point_x1_x,third_rule_point_x1_y])
+    third_rule_points.append([third_rule_point_x2_x,third_rule_point_x2_y])
+    third_rule_points.append([third_rule_point_x3_x,third_rule_point_x3_y])
+    third_rule_points.append([third_rule_point_x4_x,third_rule_point_x4_y])
 
+    print("四个交点的位置是：")
+    print(third_rule_points)
     
 
     with open("H:/github/camera_project_files/cv_dnn_models/yolov3.txt", 'r') as f:
@@ -103,6 +109,7 @@ def ThirdRulesDetection(image):
     class_ids = []
     confidences = []
     boxes = []
+    boxes_with_center = []   #有中心位置的boxes，因为前面的boxes需要用在后面的函数中，所以这里新建一个变量用来存储
     conf_threshold = 0.5
     nms_threshold = 0.4
 
@@ -124,7 +131,9 @@ def ThirdRulesDetection(image):
                 y = center_y - h / 2
                 class_ids.append(class_id)
                 confidences.append(float(confidence))
-                boxes.append([x, y, w, h,center_x, center_y])
+                boxes.append([x, y, w, h])
+                boxes_with_center.append([x,y,w,h,center_x,center_y])
+   
     # apply non-max suppression
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
 
@@ -132,7 +141,7 @@ def ThirdRulesDetection(image):
     # after nms and draw bounding box
     for i in indices:
         i = i
-        box = boxes[i]
+        box = boxes_with_center[i]
         x = box[0]
         y = box[1]
         w = box[2]
@@ -146,16 +155,16 @@ def ThirdRulesDetection(image):
             num = 0
             for item in third_rule_points:
                 if(abs(center_x-item[0]) < Width/10):
-                    print('符合完美点' + num)
+                    print('符合完美点' + str(num))
                 else:
-                    print('不符合完美点'+ num)
+                    print('不符合完美点'+ str(num))
                 num = num + 1
         
 
         #x，y轴坐标，长度和宽度
         print(x,y,w,h)
 
-        draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h), Width, Height)
+        draw_bounding_box(classes, COLORS, image, class_ids[i], confidences[i], round(x), round(y), round(x+w), round(y+h))
 
 
     # display output image    
