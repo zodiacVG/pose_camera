@@ -35,14 +35,14 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-            <ImageView
-                android:id="@+id/btn_camera_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/btn_text"
+                android:layout_width="150sp"
+                android:layout_height="61dp"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/selector_camera"
-                android:contentDescription="@string/shy"
+                android:background="@color/white"
                 android:clickable="true"
+                android:contentDescription="@string/shy"
                 android:focusable="true" />
 
         </LinearLayout>
