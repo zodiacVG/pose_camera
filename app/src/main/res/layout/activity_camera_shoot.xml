@@ -60,17 +60,14 @@
             android:paddingTop="5dip"
             android:paddingBottom="5dip">
 
-            <ImageView
-                android:id="@+id/btn_camera_beauty"
+            <ImageButton
+                android:id="@+id/ib_photos"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1.0"
-                android:scaleType="center"
-                android:src="@drawable/btn_camera_beauty"
-                android:contentDescription="@string/select_beauty"
-                android:clickable="true"
-
-                android:focusable="true" />
+                android:scaleType="centerInside"
+                android:src="@color/white"
+                android:background="@color/white"/>
 
             <ImageView
                 android:id="@+id/btn_camera_shutter"

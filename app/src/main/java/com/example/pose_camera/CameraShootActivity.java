@@ -28,7 +28,9 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -62,6 +64,7 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
             }
         }
     };
+    private ImageButton ib_photos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
         previewView = findViewById(R.id.previewView);
         bSelectPicture = findViewById(R.id.btn_camera_filter);
         swh_Judge = findViewById(R.id.swh_Judge);
+        ib_photos = findViewById(R.id.ib_photos);
         isJudge = swh_Judge.isChecked();
         Permission();
         bSelectPicture.setOnClickListener(view -> {
@@ -152,12 +156,15 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
         imageAnalysis.setAnalyzer(getExecutor(), image -> {
 
             final Bitmap bitmap = previewView.getBitmap();
-            String base64 = ImageUtil.imageToBase64(bitmap);
-            if (isJudge) {
-                if (countAnalysis % 10 == 0) {
-                    CreateSurvey(base64);
+            if (bitmap != null){
+
+                String base64 = ImageUtil.imageToBase64(bitmap);
+                if (isJudge) {
+                    if (countAnalysis % 40 == 0) {
+                        CreateSurvey(base64);
+                    }
+                    countAnalysis++;
                 }
-                countAnalysis++;
             }
             image.close();
 
@@ -167,7 +174,7 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
     }
 
     private void CreateSurvey(String base64) {
-        String url = "http://192.168.3.226:8000/Iscomplete ";
+        String url = "http://172.25.134.79:5000/ ";
         ClientUtil clientUtil = new ClientUtil();
         clientUtil.SendImgString(url, base64, mHandler);
     }
@@ -199,6 +206,7 @@ public class CameraShootActivity extends AppCompatActivity implements CompoundBu
                         Uri savedUri = outputFileResults.getSavedUri();
                         Log.e("保存路径", String.valueOf(savedUri));
                         Toast.makeText(CameraShootActivity.this, "保存成功: ", Toast.LENGTH_SHORT).show();
+                        ib_photos.setImageURI(savedUri);
                     }
 
                     @Override
